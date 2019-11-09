@@ -1,0 +1,14 @@
+body{
+  background-color: #dcdcdc;
+}
+
+.bg-primary{
+}
+
+ol#gameCategories > li{
+  cursor: pointer;
+}
+
+ol#gameCategories > li:hover {
+  font-weight: 600;
+}
