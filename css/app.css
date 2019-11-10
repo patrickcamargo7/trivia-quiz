@@ -2,6 +2,10 @@ body{
   background-color: #dcdcdc;
 }
 
+section#game{
+  display: none;
+}
+
 .bg-primary{
 }
 
@@ -11,4 +15,23 @@ ol#gameCategories > li{
 
 ol#gameCategories > li:hover {
   font-weight: 600;
+}
+
+ol#gameLevel > li{
+  cursor: pointer;
+}
+
+ol#gameLevel > li:hover {
+  font-weight: 600;
+}
+
+.answer{
+  margin-bottom: 10px;
+  background-color: #dcdcdc;
+  padding: 5px 5px 5px 5px;
+  cursor:pointer;
+}
+
+.answer:hover{
+  background-color: #bcbcbc;
 }

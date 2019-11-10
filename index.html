@@ -35,6 +35,10 @@
                   <a class="nav-link" href="#">New Game <span class="sr-only">(current)</span></a>
                 </li>
           </ul>
+
+          <div class="mr-auto">
+            <div id="chronometer" class="text-white">
+          </div>
         </div>
       </div>
       </nav>
@@ -60,9 +64,40 @@
                   <div>
                     <ol id="gameCategories"></ol>
                   </div>
-                  <a href="#" class="btn btn-primary bg-primary text-white btn-block">Start Game</a>
+                  <a href="javascript:void(0)" id="btnGameStart" class="btn btn-primary bg-primary text-white btn-block">Start Game</a>
                 </div>
               </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="game" class="my-5">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="p-2">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                          <li class="breadcrumb-item active" aria-current="page" id="selectedCategory"></li>
+                        </ol>
+                      </nav>
+                </div>
+              
+                <h5 class="card-title text-center"><strong id="question"></strong></h5>
+
+                <div id="answersContainer" class="px-2">
+                    <div class="card question">
+                      
+                    </div>
+                </div>
+
+                <div class="px-2">
+                    <a href="javascript:void(0)" id="btnNext" class="btn btn-primary bg-primary text-white btn-block">Next</a>
+                    <a href="javascript:void(0)" id="btnSkip" class="btn btn-primary bg-primary text-white btn-block">Skip</a>
+                </div>
+            </div>
         </div>
       </div>
     </div>
