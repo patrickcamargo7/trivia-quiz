@@ -35,3 +35,57 @@ ol#gameLevel > li:hover {
 .answer:hover{
   background-color: #bcbcbc;
 }
+
+.seconds{
+  margin-left: 5px;
+  font-size: 12px;
+}
+
+#chronometerContainer{
+  background-color: #dcdcdc;
+  padding: 10px;
+  display: none;
+}
+
+#chronometerContainer > *{
+  color: gray;
+}
+
+.answer-selected{
+  background-color: rgb(95, 95, 194);
+  font-weight: 600;
+  color: #fff;
+}
+
+.answer-selected:hover{
+  background-color: rgb(95, 95, 194);
+  font-weight: 600;
+  color: #fff;
+}
+
+.answer-correct{
+  background-color: rgb(94, 208, 181);
+  font-weight: 600;
+  color: #fff;
+}
+
+.answer-correct:hover{
+  background-color: rgb(94, 208, 181);
+  font-weight: 600;
+  color: #fff;
+}
+
+.answer-erase{
+  background-color: rgb(208, 102, 94);
+  color: #fff;
+}
+
+.answer-erase:hover{
+  background-color: rgb(208, 102, 94);
+  color: #fff;
+}
+
+#scoreContainer{
+  color: #fff;
+  font-weight: 600;
+}
