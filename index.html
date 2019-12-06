@@ -54,9 +54,7 @@
                   <h6 class="card-subtitle mb-2 text-muted">Select Level:</h6>
                   <div>
                     <ol id="gameLevel">
-                      <li data-id="1" class="levelItem">Easy</li>
-                      <li data-id="2" class="levelItem">Medium</li>
-                      <li data-id="3" class="levelItem">Hard</li>
+ 
                     </ol>
                   </div>
 
@@ -112,7 +110,147 @@
   </section>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js" integrity="sha256-S1J4GVHHDMiirir9qsXWc8ZWw74PHHafpsHp5PXtjTs=" crossorigin="anonymous"></script>
-  <script src="js/app.js"></script>
+  
+  <script type="module">
+    import factories from './js/factories.js';
+    import defaultGameState from './js/gameState.js';
+
+    const gameDom = factories.createGameDom();
+    const gameService = factories.createGameService();
+
+    let chronometerInterval;
+
+    function Game (gameState) {
+      let context = this;
+
+
+      this.setState = function (prop, value) {
+        this.state[prop] = value;
+      };
+
+      this.onSelectCategory = function (category) {
+        context.setState('selectedCategory', category);
+      };
+
+      this.onSelectLevel = function (level) {
+        context.setState('selectedLevel', level);
+        context.setState('currentTime', context.state.selectedLevel.time); 
+      };
+
+      this.onGameStart = function() {
+        if (context.state.selectedCategory && context.state.selectedLevel) {
+          gameService.fetchQuestions(10, context.state.selectedCategory.id, context.state)
+            .then((questions) => {
+              context.setState('questions', questions);
+              context.showQuestion();
+            })
+        }
+      };
+
+      this.showQuestion = function() {
+        context.initCronomether();
+
+        if (context.state.currentQuestion == null) {
+          context.setState('currentQuestion', 0);
+        } 
+
+        gameDom.buildGameScreen(context.state.currentQuestion, context.state.questions[context.state.currentQuestion]);
+      }
+
+      this.onSelectAnswer = function (answer) {
+        context.setState('selectedAnswer', answer);
+      }
+
+      this.calculateScore = function () {
+        let points = 0;
+        if (context.state.questions[context.state.currentQuestion].correct_answer === context.state.selectedAnswer) {
+          points = context.state.score + context.state.selectedLevel.hit;
+          context.setState('hits', context.state.hits + 1);
+        } else {
+          let diff = context.state.score - context.state.selectedLevel.error;
+          points = diff <= 0 ? 0 : diff;
+          context.setState('errors', context.state.errors + 1);
+        }
+
+        context.setState('score', points);
+        gameDom.writeScore(context.state.score);
+      }
+
+      this.nextLevel = function () {
+        context.setState('currentQuestion', context.state.currentQuestion + 1);
+        context.setState('currentTime', context.state.selectedLevel.time); 
+
+        clearTimeout(chronometerInterval);
+
+        gameDom.showCorrect();
+
+        if (context.state.currentTime == 0) {
+          context.showQuestion();
+        } else {
+          setTimeout(() => {
+            context.calculateScore();
+            context.showQuestion();
+          }, 2000);
+        }
+      }
+
+      this.initCronomether = function () {
+        gameDom.writeTime(context.state.currentTime);
+
+        if (context.state.currentTime > 0) {
+          chronometerInterval = setInterval(() => {
+            context.setState('currentTime', context.state.currentTime - 1);
+            gameDom.writeTime(context.state.currentTime);
+            
+            if (context.state.currentTime <= 0) {
+              clearTimeout(chronometerInterval);
+              gameDom.showCorrect();
+              context.calculateScore();
+            } else {
+              context.setState('currentTime', context.state.currentTime - 1);
+              gameDom.writeTime(context.state.currentTime);
+            }
+            gameService.saveGameState(context.state);
+          }, 1000);
+        } else {
+          console.log("aqui...");
+          setTimeout(() => {
+            gameDom.showCorrect();
+          }, 0);
+        }
+      }
+
+      this.initialize = function() {
+        const categories = gameService.fetchCategories()
+        .then((categories) => {
+          gameDom.buildHomeScreen(context.state.levels, categories);
+        });
+      };
+
+      gameDom.listeners.categorySelect.subscribe(this.onSelectCategory)
+      gameDom.listeners.levelSelect.subscribe(this.onSelectLevel);
+      gameDom.listeners.gameStart.subscribe(this.onGameStart);
+      gameDom.listeners.answerSelect.subscribe(this.onSelectAnswer);
+      gameDom.listeners.nextLevel.subscribe(this.nextLevel);
+
+      if (gameState) {
+        console.log("carregado.." , gameState);
+
+        this.state = gameState;
+        this.showQuestion();
+      } else {
+        this.state = defaultGameState;
+      }    
+    }; 
+
+    const gameStateSaved = gameService.fetchGameSavedState();
+
+    const game = new Game(gameStateSaved);
+    game.initialize();
+
+    console.log(game);
+
+  </script>
 
 </body>
 </html>

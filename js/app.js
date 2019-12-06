@@ -1,4 +1,11 @@
 (function () {
+  /**
+   - Escolher Categoria Randomicamente
+   - Finalizar Jogo (Ao errar 3 vezes e ao concluír)
+   - Após cada pergunta, o jogo solicita ao usuário se ele deseja uma próxima pergunta e se esta próxima pergunta 
+     é Nova (remota da API) ou da lista de perguntas do "Responder mais tarde". 
+   */
+
   const routes = {
     categories: 'https://opentdb.com/api_category.php',
     questions: 'https://opentdb.com/api.php'
@@ -32,7 +39,7 @@
     loadGame: true,
     amount: 10,
     questions: null,
-    laterQuestion: null,
+    laterQuestions: [],
     currentQuestion: null,
     score: 0,
     levels: [
@@ -60,7 +67,7 @@
   let chronometerInterval = null;
 
   gameDOM.btnStart.addEventListener('click', onClickGameStart);
-  gameDOM.btnNext.addEventListener('click', nextLevel);
+  gameDOM.btnNext.addEventListener('click', onClickNextLevel);
   gameDOM.levelItem.forEach(lvl => {
     lvl.addEventListener('click', onClickSelectLevel);
   });
@@ -106,7 +113,7 @@
   /**
    * Build game Screen
    */
-  function buildGameScreen() {
+  function buildGameScreen(question) {
     console.log('game questions', game.questions);
     console.log('level ', game.level);
 
@@ -207,6 +214,9 @@
       addCounterError();
     }
     gameDOM.score.innerText = game.score;
+    game.currentQuestion = game.currentQuestion + 1;
+
+    storeGameState();
   }
 
   /**
@@ -244,7 +254,6 @@
 
         game.currentQuestion = 1;
 
-
         storeGameState();
         buildGameScreen();
       })
@@ -272,7 +281,7 @@
       });
   }
 
-  function nextLevel(event) {
+  function onClickNextLevel(event) {
     game.currentQuestion = game.currentQuestion + 1;
 
     buildGameScreen();
