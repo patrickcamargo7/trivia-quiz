@@ -177,6 +177,10 @@ const gameDom = {
   onClickAnswer: function(answer) {
     this.listeners.answerSelect.notifyAll(answer);
     this.clearAllStyleOfAnswer.call(this).then((response) => {
+      /**
+       * Refactor
+       */
+
       event.target.classList.add('answer-selected');
       event.target.dataset.selected = true;
     });
@@ -203,8 +207,9 @@ const gameDom = {
   showCorrect: function () {
     let answers = document.querySelectorAll('.answer');
 
-    console.log("Exibindo correta...");
-
+    /**
+     * Refactor
+     */
     answers.forEach((answer) => {
       answer.style.pointerEvents = 'none';
 
